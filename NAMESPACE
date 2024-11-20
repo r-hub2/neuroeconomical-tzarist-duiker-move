@@ -1,0 +1,126 @@
+#importFrom(graphics, "plot")
+import(sp)
+import(methods)
+import(geosphere)
+import(raster)
+importFrom("raster", "distance")
+importFrom("stats", "as.dist")
+importFrom("utils", "combn")
+importFrom(httr, GET)
+importFrom(httr, HEAD)
+importFrom(httr, add_headers)
+importFrom(httr, parse_url)
+importFrom(httr, modify_url)
+importFrom(httr, write_disk)
+importFrom(httr, content)
+importFrom(stats, sd)
+importFrom(stats, var)
+importFrom(stats, optim)
+importFrom(stats, optimize)
+importFrom(stats, complete.cases)
+importFrom(utils, read.csv)
+importFrom(utils, unzip)
+importFrom(utils, capture.output)
+importFrom(graphics, par)
+importFrom(graphics, abline)
+importFrom(graphics, segments)
+importFrom(grDevices, rgb)
+importFrom(parallel, parLapply)
+importFrom(xml2,xml_find_all)
+importFrom(xml2,xml_contents)
+importFrom(xml2,xml_attr)
+importFrom(memoise,memoise)
+importFrom(Rcpp,sourceCpp) # to statify check
+
+exportClasses(
+	DBBMM,
+	DBBMMStack,
+	dBMvarianceTmp,
+	dBGBvariance,
+	dBGBvarianceTmp,
+	dynBGB,
+	Move,
+	MovebankLogin,
+	MoveBurst,
+	MoveStack,
+	.UD,
+	.UDStack,
+	.MoveTrack,
+	.MoveTrackSingle,
+	.MoveTrackSingleBurst,
+	.MoveGeneral,
+	.unUsedRecords,
+	.unUsedRecordsStack
+)
+exportMethods(
+	angle,
+	brownian.bridge.dyn,
+	brownian.motion.variance.dyn,
+	burst,
+	burstId,
+	"burstId<-",
+	citations,
+	"citations<-",
+	contour,
+	corridor,
+	distance,
+	"dynBGB",
+  "dynBGBvariance",
+	emd,
+	equalProj,
+  getDataRepositoryData,
+	getDuplicatedTimestamps,
+	getMovebank,
+	getMovebankAnimals,
+	getMovebankData,
+	getMovebankID,
+	getMovebankLocationData,
+	getMovebankNonLocationData,
+  getMovebankReferenceTable,
+	getMovebankSensors,
+	getMovebankSensorsAttributes,
+	getMovebankStudies,
+	getMovebankStudy,
+	getMotionVariance,
+	getVolumeUD,
+	hrBootstrap,
+	idData,
+	'idData<-',
+	interpolateTime,
+  lines,
+  licenseTerms,
+  "licenseTerms<-",
+	move,
+	move2ade,
+	movebankLogin, 
+	moveStack,
+	n.indiv,
+	n.locs,
+  namesIndiv,
+	outerProbability,
+	plot,
+	plotBursts,
+	points,
+	raster2contour,
+	seglength,
+	searchMovebankStudies,
+	sensor,
+	show,
+	speed,
+	split,
+	summary,
+  thinTrackTime,
+  thinDistanceAlongTrack,
+	timeLag,
+	timestamps,
+	"timestamps<-",
+	trackId,
+	turnAngleGc,
+	UDStack,
+	unUsedRecords,
+	"unUsedRecords<-"
+)
+useDynLib(move, .registration=T)
+
+
+           

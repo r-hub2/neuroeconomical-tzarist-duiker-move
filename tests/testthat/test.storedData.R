@@ -1,0 +1,11 @@
+context("stored data")
+test_that("storedData", {
+  data(leroy)
+  expect_true(validObject(leroy))
+  data(fishers)
+  expect_true(validObject(fishers))
+  data(dbbmmstack)
+  expect_true(validObject(dbbmmstack))
+  data(leroydbbmm)
+  expect_true(validObject(leroydbbmm))
+})

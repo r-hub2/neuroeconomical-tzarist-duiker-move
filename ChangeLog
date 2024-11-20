@@ -1,0 +1,569 @@
+Version 4.2.6
+  
+  * Fix tests on CRAN for timezone
+
+Version 4.2.5
+	
+	* Fix no remap issue
+
+Version 4.2.4
+
+	* Change from sp::identicalCRS to terra::same.crs to prepare for future raster release
+
+Version 4.2.2
+
+	* Resolve check errors on macos (skip suncalc for timezone bug)
+
+Version 4.2.0
+
+	* getDataRepositoryData is Defunct as movebank changed setup
+	* Import of rgdal droped
+	* In preparation for rgdal being retired spTransform now uses sf this might have consequencs for the consistency of attributes of for example bbox
+	* Proper forwarding of arguments in coridor function when called on stack (#77)
+	* Remove dependency on `maptools` by adopting some functions and working with `suncalc` in vignette
+
+Version 4.1.12
+
+	* Rebuild example data to work with new raster package
+
+Version 4.1.10
+
+    * Fix cran errors in example
+	* Integrate download suggestions
+	* Style package
+	* Fix stacking timestamps in unused records
+	* Fix getMovebankLocationData for multiple sensors
+
+Version 4.1.8
+
+    * Check namespace requirements in examples and tests
+    * Clarify examples for emd and angles
+    * Change class inheritance checks
+
+Version 4.1.6
+
+	* Fix distance error
+	* use licence_terms in download
+	* Update vignette
+        * Improved error reporting long url
+        * Fixed bug in brownian.bridge.dyn where window.size was not used
+
+Version 4.0.4
+
+	* Changes to movestack test as R changes behaviour
+
+Version 4.0.2
+
+	* fix small issues with cran checks
+
+Version 4.0.0
+
+	* updates to account for changes in rgdal and sp
+
+Version 3.3.0
+
+        * Updated and completed both vignettes
+        * move function now accepts movement objects from the libraries ctmm, bcpa, EMbC and a data.frame object
+        * Added getMovebankLocationData function to download location data as a data.frame from Movebank
+
+Version 3.2.0
+
+        * Use updated movebank api for downloading data, now depend on visible column. This might lead to small changes in the downloaded dataset if specific outlier combinations are used. 
+        * Added getMovebankReferenceTable function to download reference data from movebank study.
+        * Added namesIndiv to get names of individuals in a move/moveStack object.
+        * Now getMovebankData includes user defined tag number information.
+
+Version 3.1.0
+
+        * Add track thining
+	* Maintenance release with bug fixes to solve some issues
+	
+Version 3.0.2
+
+	* Maintenance release to solve some issues with testing
+
+Version 3.0.0
+
+	* Remove constraint to have no unused timestamps at observed timestamps
+	* Add download function for movebank data repository
+	* Now getMovebankData gets records per individual and not deployment (make sure code is adjusted where needed)
+	* Now the move function does not create or remove extra columns
+	* moveStack can stack multiple animals directly and can force a timestamp
+	* getMovebankData now includes license terms, study name and citation (reported by Scott LaPoint)
+	* Implemented variance methods for MoveStacks
+	* Various small updates in error reporting
+	* Implemented download of acc and other extra movebank data
+
+Version 2.1.0
+
+	* Added earth movers distance functions
+	* Added replacement methods for burstIds
+	* Added functionality to change burstStacks to Udstacks
+
+Version 2.0.0
+
+	* Increases speed of the Brownian bridge calculation by not
+	calculation for the whole grid any more (no need any more to minimize
+	raster size)
+	* Use httr for downloads
+
+2015-10-22  bart
+
+	* Test ltraj move function a bit
+
+2015-10-20  bart
+
+	* dont require package in test
+	* Documentation update
+
+2015-10-16  bart
+
+	* typo
+	* Switch download to httr away from rcurl
+
+2015-10-15  bart
+
+	* Make sure ltraj is recoginized as a class
+	* Fix test so they are neatly implemented but need new testthat so
+	  currently skipped
+	* Fix documentation
+	* Allow non verbose brownian bridge
+
+2015-10-14  bart
+
+	* Make move function work for ltraj objects and fix split for ud
+	  stacks
+
+2015-09-16  bart
+
+	* Seg length was accidentally calculating a square matrix, further
+	  small fixes and updates to examples and tests
+	* Seglength calculated a square matrix for stacks which was not
+	  intended
+	* Moved all example data to data folder and adjusted examples and
+	  tests accordingly, also update plotBurst for multispatial points
+
+2015-09-15  bart
+
+	* adding data in the data folder
+	* Make idData deal with sp MultiPoints
+	* update checks and the spatial lines function which was broken
+	* Added turnAngleGc for stacks and some checks for turnAngleGc
+
+2015-09-03  bart
+
+	* Update make procedures
+	* reformat and generalized test
+
+2015-07-29  bart
+
+	* Update checking of unused records stack and subsetting function
+
+2015-07-15  bart
+
+	* Fix reading of envdata files (related to R version 3.1.0 that had
+	  an other type convert)
+
+2015-07-08  bart
+
+	* Update help of download functions
+	* clarified removeduplicatedtimestamps option for getmovebankdata
+
+2015-07-07  bart
+
+	* the time.lag function is removed
+
+2015-07-06  bart
+
+	* Updated the test to present the new distance calculations which
+	  are on an ellipsoid
+
+2015-06-29  bart
+
+	* import inorder to meet devel checks
+	* lines for burst also allow to color segments
+	* fix test for citation and lineMidpoints, the last now returns
+	  numberd names in the coordinates
+	* Removed warnings due to duplicated names in hrBootstrap sampling
+	  due to tracking of coordinates names in spatial opject
+	* Added function burstId to retrieve burst Ids
+
+2015-06-23  bart
+
+	* change hrBootstrap from print to message
+
+2015-05-27  bart
+
+	* Some updates to corridor function when no corridor points are
+	  found
+
+2015-04-15  bart
+
+	* Update tests
+
+2015-04-14  bart
+
+	* Additional tests
+	* fix bug on windows
+	* Also allow missing projection in move function
+	* Updated move function to accomodate character and numeric input
+	* Removing most warning messages from tests
+	* Move doesnt assume the utm column in movebank output any more
+	* Move all test to testthat and add some
+
+2015-03-23  bart
+
+	* Specify ellipsoid everywhere to accomodate new proj library (4.9)
+
+2015-03-19  bart
+
+	* Deprecated time.lag function please use timeLag now
+
+2015-03-13  bart
+
+	* Some small updates to Description file
+	* Addressing some issues with notes for new R versions, to prepare
+	  for new release. Improved error reporting for brownian bridge
+	  function. Prepare for new movebank download. Preparing tests for
+	  SP keeping rownames.
+
+2015-01-22  bart
+
+	* moved seglength test
+
+2015-01-16  bart
+
+	* Adhere to new namespace checks
+	* Made character string or vector of location errors worki on
+	  stacks thanks to reporting of JW. Beeman
+
+2015-01-07  bart
+
+
+2014-11-17  bart
+
+	* Add function to find number of individuals
+
+2014-10-06  bart
+
+	* More clear error message BGBvar fun
+
+2014-08-18  bart
+
+	* improved error reporting for dbbmm
+
+2014-08-04  bart
+
+	* Update documentation
+	* Add functions for extracting sensor data and trackId from
+	  unUsedStack
+	* Updates the removeDuplicatedTimestamps to also remove records
+	  that are in the real records from the unUsedRecords
+
+2014-07-22  bart
+
+	* compressed move.RData
+
+2014-07-02  bart
+
+	* Make sure locations are read as numeric even if it has many
+	  decimals, this accomodates a change in R 3.1.0
+
+2014-06-11  bart
+
+
+2014-06-10  bart
+
+	* define a split method for a UDStack and make the number of
+	  contour plots square
+	* improve error reporting when object is smaller than the window
+	  size
+
+2014-05-21  bart
+
+
+2014-04-25  bart
+
+	* Changes for new release, the release adds the bivariate gaussian
+	  bridges, brownian bridges per burst and many small changes
+
+2014-04-24  bart
+
+	* fix getMotion variance
+	* fix to minimal margins brownian bridge dyn stack
+
+2014-04-23  bart
+
+	* start adding getMotionVariance
+	* match ud calculation between dbgb and dbbmm
+
+2014-04-16  bart
+
+	* update email adres
+
+2014-04-15  bart
+
+	* make test more relyable
+	* fix documentation
+	* speed up dynBGB example
+	* Check for error with projections for bridge calculations
+	* move tests brownian bridge to testthat
+
+2014-04-14  bart
+
+
+2014-04-10  bart
+
+	* small cleanup
+
+2014-04-08  bart
+
+	* Fix bug in identifying unique columns in idData when stacking
+	  move objects, reported by Stef Sijben
+
+2014-04-04  bart
+
+	* remove unused variables for window calculation
+
+2014-04-03  bart
+
+	* Make it work with new sp where there is stronger checking in the
+	  CRS function
+
+2014-03-04  bart
+
+	* Updating test improving speed of examples
+
+2014-02-26  bart
+
+	* introducing testthat
+
+2014-02-25  bart
+
+	* Update to documentation and testing of dBGB
+
+2014-02-21  bart
+
+	* Start with including BGB functions in move
+	* use n.locs in brownianbridgedyn
+
+2014-01-29  bart
+
+	* bug in line mid points causing wrong plot in plotBursts
+
+2014-01-24  bart
+
+	* Fix error to movestack introduced in last change. Make dependency
+	  to new geosphere for right distRhumb function
+
+2014-01-20  bart
+
+	* Switch to usage of validNames in raster (adds dependency on
+	  recent raster version)
+	* added bursted dbbmm tests and speeded up some examples
+	* adding initial documentation for interpolation and bursted dbbmm
+	* Fixes to bursted dBBMM
+	* functions for dealing with dBMvarianceBurst objects
+	* Added linear time interpolation function
+	* added bursted brownian bridges
+
+2013-10-21  bart
+
+
+2013-10-17  bart
+
+	* shortend some examples and fixed order problem when adding
+	  columns in moveStack
+	* Fixes to movestack to ensure orderd unused records, fixes to the
+	  import of unused records in the web import
+
+2013-10-07  bart
+
+	* some fixes for stacking unused records
+
+2013-09-17  bart
+
+	* make equal proj return true if none is set
+
+2013-09-03  bart
+
+	* Removed extra imports that were not needed
+
+2013-09-02  bart
+
+	* Added function trackId for returning the id of individuals in a
+	  stack. Made the [[ subset function return a stack for multiple
+	  individuals and made it work for ligics and numbers. Also ensure
+	  order of factor levels is same as order of individuals. Use rbind
+	  spatial points in moveStack for consistency in column names
+	* Made examples match equal projection changes
+
+2013-08-26  bart
+
+	* Change the equal projection function, it did not work on objects
+	  with long projection strings it is now based on identicalCRS from
+	  the SP package
+
+2013-08-19  bart
+
+	* fixed various bugs noticed durring the animove course, speed
+	  summary (Runit added), double usage of spTransform
+
+2013-08-01  bart
+
+	* require newer version of R due to presence of paste0
+
+2013-07-23  bart
+
+	* Decreased size corridor example
+	* small typo
+	* Limit some move checks, to occasions were only sed and zcat work
+
+2013-07-22  bart
+
+	* Cleaning up the svn & making subset work for extracting
+	  individuals from a stack where none used sensors are present in
+	  the factor levels
+	* Resolve two notes in Rdevel about line length in manuals and
+	  inst/doc vs vignette directory
+	* Make vignettes indepenent of stamen servers and prepare for
+	  release
+
+2013-07-09  bart
+
+	* added checks for the move function and updated the documentation
+	  accordingly
+
+2013-07-08  bart
+
+	* There have been updates to the import function that allow to
+	  remove duplicated timestamps. The move function now accepts text
+	  connections and zip files from the annotation tool. There was
+	  also a bug fix to getMovebankData fixed by ordering the idData
+	  dataframe
+	* fix to documentation of corridor
+
+2013-07-02  bart
+
+	* update citation in coridor documentation
+	* made searchMovebankStudies return a character vector and
+	  specified it in the manual. Also clarified an error message in
+	  brownian bridge dyn
+
+2013-06-26  bart
+
+	* Update to some documentation. Some extra tests. Fix when multiple
+	  sensors are imported through the web interface (reported by B
+	  Carlson)
+
+2013-06-24  bart
+
+
+2013-06-21  bart
+
+	* new optimization for unique per id given that the previous would
+	  fail with repeated values in different individuals
+	* speed up in test for idData in .move
+
+2013-06-11  bart
+
+	* Bug fixed when no variance estimate is present for segment of
+	  interest reported by: Alexandra Bell
+
+2013-06-04  bart
+
+	* Updated documentation \n change printing of computational size to
+	  message \n reduced the number of installed datasets to also speed
+	  up things
+
+2013-06-03  bart
+
+	* added documentation for idData\n added some test for attached
+	  data and idData\n modified split functions for code reuse\n
+	  update documentation for download functions
+
+2013-05-29  bart
+
+	* further simplification of web import so getMovebank does not
+	  convert characters anymore. Also fix for making data frame with
+	  difftime object in the idData
+	* More improvements to web import making things more straight
+	  forward.
+
+2013-05-28  bart
+
+	* make burst return the burst if no factor is supplied
+
+2013-05-27  bart
+
+	* subset for columns with character
+
+2013-05-24  bart
+
+	* Fixes to the web import when haveing not a 1:1 relation between
+	  sensors, individuals & when there are indiv without data also
+	  drop sensor levels in unUsed
+
+2013-05-22  bart
+
+	* Make sure that subseting a movestack doesnt screw up order
+	* ensure order in idData is the same as order in trackId also
+	  ensure this is represented in color usage in the plot
+
+2013-05-21  bart
+
+	* let move function work if a movebank file only has unused records
+	  for individuals
+	* restricted line ploting to individuals with 2 or more datapoints
+
+2013-05-20  bart
+
+	* added export of id data when converting to dataframe
+	  function do access and modify the iddata + some small tests
+	  documents asp arugment for plot
+
+2013-05-16  bart
+
+	* ensure aspect ratio for plots
+
+2013-05-08  bart
+
+
+2013-04-29  bart
+
+	* Improved error reporting when movebank is down for maintainance
+
+2013-04-23  bart
+
+	* Suggest solution in error for UDs not summing to one
+
+2013-04-22  bart
+
+	* fix to accomodate new rgdal
+
+2013-04-19  bart
+
+	* movebank files now read with strings as factors
+
+2013-04-12  bart
+
+
+2013-04-11  bart
+
+	* add spatialLines
+
+2013-04-10  bart
+
+	* speed up corridor example
+	* updated checks for R 3.1.0
+
+2013-04-08  bart
+
+
+2013-04-05  bart
+
+	* fix for web import in case of numeric indiviual names
+
+2013-04-04  bart
+
+

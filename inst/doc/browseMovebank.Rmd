@@ -1,0 +1,353 @@
+---
+title: "Browsing Movebank within R"
+author: "Marco Smolla, Bart Kranstauber & Anne Scharf"
+date: "`r Sys.Date()`"
+output:
+  html_vignette:
+    number_sections: true
+    toc: yes
+    toc_depth: 3
+  pdf_document:
+    number_sections: true
+    toc: yes
+    toc_depth: '3'
+always_allow_html: yes
+vignette: >
+ %\VignetteKeyword{animal movement, GPS, tracking data, Movebank}
+ %\VignetteIndexEntry{Browsing Movebank within R} 
+ %\VignetteEncoding{UTF-8}
+ %\VignetteEngine{knitr::rmarkdown}
+---
+
+```{r, echo=FALSE, include=FALSE}
+knitr::opts_chunk$set(collapse = TRUE)
+```
+
+</br>  
+
+## Introduction
+Movebank (www.movebank.org) is a free online database of animal tracking data, where data owners can manage their data and have the option to share it with colleagues or the public. If the public or a registered user has permission to see a study, the study can be downloaded as a .csv file and imported directly into R (see "An introduction to the 'move' package" vignette for details). Those with Movebank accounts can also log in, browse and download data they have access to directly within the `Move` package.   
+This vignette gives examples of how to login, search for studies, get sensor, animal and study IDs, download location data and non-location data, and access data from the Movebank Data Repository. All results will be based on the studies for which your account has permission to view or download. Movebank users retain ownership of their data and choose whether and with whom to share it.  
+To get more details of the options of a specific function, see the functions help file.
+
+
+A possible workflow could look like this: 
+
+- First you always have to create an object containing your credentials of your [Movebank](https://www.movebank.org/) account in order to use the functions listed in this manual (except for Section 6.):  
+**1. Login to Movebank**
+
+- Then you can search for studies or get information about studies, animals, tags, etc.:  
+**2. Search for a study name and MovebankID**  
+**3. Get information about the study, tags, animals and deployments**  
+
+- Once you know the study name and the kind of data you want to download you can:  
+**4. Download the location data of a study as a `move`/`moveStack` object**  
+**5. Download the location data of a study as a `data.frame`**  
+**6. Download the non-location data of a study as a `data.frame`**  
+
+- To download data published in the Movebank Data Repository you do not need to have an account on Movebank:  
+**7. Download data from the Movebank Data Repository as a `move`/`moveStack` object **  
+  
+</br>  
+
+# Login to Movebank
+There are two ways to login. Either you login every time you use the functions that are presented in this vignette, or you use the `movebankLogin()` function to login to Movebank and create an object that stores your login information. You can pass this object on to every function you use to skip the login process. Use the username and password which you use to login on [Movebank.](https://www.movebank.org) Note that the password is stored in this object meaning that if you store the session or objects, these are stored in plain text. If you want to hide the password while typing it might be worth to have a look at the package: "getPass".
+
+If you do not have a Movebank account, you can register at https://www.movebank.org or download csv files of publicly available studies directly from Movebank and read them into the Move package as described in the help file of the `move()` function.
+
+```{r, eval=F}
+library("move")
+loginStored <- movebankLogin(username="user", password="password")
+```
+
+</br>   
+
+# Search for a study name and MovebankID
+## Search for a study name with keywords
+You can use the `searchMovebankStudies()` function to search within the study names for a specific study. For example, if you want to find all studies that worked with goose try the following:
+
+```{r, eval=F}
+searchMovebankStudies(x="oose", login=loginStored)
+```
+You may rather use the search term without the first letter, e.g. 'oose' instead of 'Goose' or 'goose', to find studies with both ways of writing. 
+
+</p>
+
+## Get the Movebank ID of a study
+All of the functions presented here can work with the study’s Movebank ID or the study name to find information within the database. Note that study names can be changed by the user, while the Movebank ID is created by the database and will always remain the same. If you want to work with the short Movebank ID instead of the longer study name, use `getMovebankID()`. This number can also be found on the 'Study Details' page of the study on Movebank.
+
+```{r, eval=F}
+getMovebankID("Ocelots on Barro Colorado Island, Panama",login=loginStored)
+```
+
+</br>  
+
+# Get information about the study, tags, animals and deployments
+## Get general information of a study
+You found a study you are interested in, let's say 'Ocelots on Barro Colorado Island, Panama'. To get more information about this study, e.g. the authors of the study, license type, citation and more, use:
+```{r, eval=F}
+getMovebankStudy(study="Ocelots on Barro Colorado Island, Panama",login=loginStored)
+```
+
+</p>
+
+## Get information about sensors
+If you want to know which sensor types were used for each tag in this study you can use
+```{r, eval=F}
+getMovebankSensors(study="Ocelots on Barro Colorado Island, Panama",login=loginStored)
+```
+
+To see all available sensor types on Movebank, use the same function leaving the `study` argument empty.
+```{r, eval=F}
+getMovebankSensors(login=loginStored)
+```
+
+To get a list of the attributes that are available for the sensors of a particular study, use
+```{r, eval=F}
+getMovebankSensorsAttributes(study="Ocelots on Barro Colorado Island, Panama",login=loginStored)
+```
+
+</p>
+
+## Get information about the animals of a study
+NOTE: _**Agreement to license terms**: to be able to download data from a study on Movebank in R, you might first have to accept the license terms for the study. For this go to www.movebank.org, search for your study of interest, click on the download tab, and accept the license terms. **This only has to be done once per study**._
+
+A list of the animals names, their tag ids, sensors used and more information about to each individual is returned with this command
+```{r, eval=F}
+getMovebankAnimals(study="Ocelots on Barro Colorado Island, Panama",login=loginStored)
+```
+Notice that some information about animals are stored as deployment-level information, for example animal-life-stage, which might vary across multiple deployments for the same individual.
+
+</p>
+
+## Get all reference data of a study
+NOTE: _**Agreement to license terms**: to be able to download data from a study on Movebank in R, you might first have to accept the license terms for the study. For this go to www.movebank.org, search for your study of interest, click on the download tab, and accept the license terms. **This only has to be done once per study**._
+
+Get a table with all information associated to the animals, tags and deployments. This table is equivalent to the table obtained on the Movebank webpage trough the option 'Download Reference Data' of the study.
+```{r, eval=F}
+getMovebankReferenceTable(study="Ocelots on Barro Colorado Island, Panama",login=loginStored)
+```
+
+</br>  
+
+# Download the location data of a study as a 'move/moveStack' object
+
+NOTE: _**Agreement to license terms**: to be able to download data from a study on Movebank in R, you might first have to accept the license terms for the study. For this go to www.movebank.org, search for your study of interest, click on the download tab, and accept the license terms. **This only has to be done once per study**._
+
+## Download location data of a study
+An entire study can be downloaded:
+
+```{r, eval=F}
+bci_ocelot <- getMovebankData(study="Ocelots on Barro Colorado Island, Panama", login=loginStored)
+```
+
+</p>
+
+## Download location data for selected individuals of a study
+Or you can specify to download data for one or several individuals:
+```{r, eval=F}
+# for one individual
+bobby <- getMovebankData(study="Ocelots on Barro Colorado Island, Panama", animalName="Bobby", login=loginStored)
+```
+
+```{r, eval=F}
+# for several individuals
+ocelot2ind <- getMovebankData(study="Ocelots on Barro Colorado Island, Panama", animalName=c("Bobby","Darlen"), login=loginStored)
+```
+
+</p>
+
+## Download location data for a selected time range
+You can also limit your download to a given time range. The timestamp has to be in format 'yyyyMMddHHmmssSSS' or as a POSIXct, then it is converted to the character using the UTC timezone:
+```{r, eval=F}
+# download all data between "2003-03-22 17:44:00.000" and "2003-04-22 17:44:00.000"
+bci_ocelot_range1 <- getMovebankData(study="Ocelots on Barro Colorado Island, Panama", login=loginStored,
+                                     timestamp_start="20030322174400000",
+                                     timestamp_end="20030422174400000")
+
+# alternative:
+t <- strptime("20030322174400",format="%Y%m%d%H%M%S", tz='UTC')
+bci_ocelot_ranget <- getMovebankData(study="Ocelots on Barro Colorado Island, Panama", login=loginStored,
+                                     timestamp_start=t,
+                                     timestamp_end=t+as.difftime(31,units='days'))
+```
+```{r, eval=F}
+# download all data before "2003-07-24 20:00:00.000"
+bci_ocelot_range2 <- getMovebankData(study="Ocelots on Barro Colorado Island, Panama", login=loginStored, 
+                                     timestamp_end="20030724200000000")
+
+```
+```{r, eval=F}
+# download all data after "2003-07-01 20:00:00.000" only for "Bobby"
+bobby_range <- getMovebankData(study="Ocelots on Barro Colorado Island, Panama", login=loginStored, animalName="Bobby",
+                               timestamp_start="20030701200000000")
+```
+
+</p>
+
+## Dealing with duplicated timestamps
+In case the study contains duplicated timestamps, you can set the argument `removeDuplicatedTimestamps=TRUE`. This will retain the first of multiple records with the same animal ID and timestamp, and remove any subsequent duplicates. 
+
+```{r, eval=F}
+bci_ocelot <- getMovebankData(study="Ocelots on Barro Colorado Island, Panama", login=loginStored, 
+                              removeDuplicatedTimestamps=TRUE)
+```
+Duplicated timestamps can occur for many different reasons. In some cases, one duplicate record might contain more complete information or a better location estimate than the other(s). In case you want to control which of the duplicate timestamps are kept and which are deleted, we recommend to download the data as a .csv file from Movebank or to use the function `getMovebankLocationData()`, find the duplicates using e.g. `getDuplicatedTimestamps()`, decide which of the duplicated timestamp to retain, and than create a move/moveStack object with the function `move()`. These flagged duplicated records can be also marked as outliers in Movebank, by [adding an attribute](https://www.movebank.org/node/2874) like e.g. "manually_marked_outlier" to the study. Another option is to edit the records in Movebank and mark the appropriate records as outliers.
+
+</p>
+
+## Downloading a study with many locations
+If the study to be downloaded has many locations (probably in the order of 10s of millions, depends a bit on the available internet speed), the download may take so long that the connection breaks, and the study cannot be downloaded. We recommend to download each individual separately to ensure a successfully download. Bellow some examples of how one could do this.
+
+```{r, eval=F}
+## fist get the animal names of the study
+animalDF <- getMovebankAnimals(study="Ocelots on Barro Colorado Island, Panama",login=loginStored)
+animalNames <- unique(animalDF$local_identifier[animalDF$number_of_events>0]) ## to make sure only to include the animals that actually have locations
+
+## if one is sure that all individuals in the study have locations, this is a shorter way to go
+# animalNames <- unique(getMovebankAnimals(study="Ocelots on Barro Colorado Island, Panama",login=loginStored)$local_identifier)
+
+## OPTION 1: create a loop to download each individual and afterwards create a MoveStack (if study is very large, maybe option 2 is better)
+animalList <- lapply(animalNames, function(x){
+  print(paste0(x," (",match(x,animalNames), " of ", length(animalNames),")"))
+  getMovebankData(study="Ocelots on Barro Colorado Island, Panama", animalName=x, login=loginStored, removeDuplicatedTimestamps=T)
+})
+ocelotsMS <- moveStack(animalList, forceTz="UTC")
+
+## OPTION 2: if the study is very large, loading and handling the large moveStack might be very time consuming and somewhat frustrating. Therefore it might be a good idea to save each individual separately as e.g. a .RData file, and do subsequent analysis always looping through all the single individual files
+animalList <- lapply(animalNames, function(x){
+  print(paste0(x," (",match(x,animalNames), " of ", length(animalNames),")"))
+  ocelot <- getMovebankData(study="Ocelots on Barro Colorado Island, Panama", animalName=x, login=loginStored, removeDuplicatedTimestamps=T)
+  save(file=paste0("/path/to/my/folder/OcelotsIndv/",x,".RData"), ocelot)
+})
+```
+</br>  
+
+# Download location data of a study as a 'data.frame'
+
+NOTE: _**Agreement to license terms**: to be able to download with R the data of a study on Movebank, you might first have to accept the license terms for the study. For this go to www.movebank.org, search for your study of interest, click on the download tab, and accept the license terms. **This only has to be done once per data set**._
+
+To download the location data from a study you can use the `getMovebankLocationData()` function. It returns a `data.frame`. Data from different sensors can be downloaded by specifying the sensor name in the `sensorID` argument. The valid names for the `sensorID` argument are those of the column 'name' or 'id' of the table returned by `(getMovebankSensors(login=loginloginStored)`. Location sensors (e.g. GPS, Radio Transmitter,...) are those marked as 'true' in the 'is_location_sensor' column of this table. 
+
+</p>
+
+## Download location data of a study
+Download location data for a specific individual for a specific sensor. A vector of several sensors can be stated in the argument `sensorID` and/or of several individuals in the argument `animalName`. If the `animalName` argument is left empty, the data of all individuals is downloaded. If the `sensorID` argument is left empty, the data of all available location sensors of the study is downloaded:
+```{r, eval=F}
+getMovebankLocationData(study=74496970 , sensorID="GPS", 
+                           animalName="DER AR439", login=loginStored)
+```
+
+</p>
+
+## Download location data for a selected time range
+Location data can be also downloaded for a specific time range (See Section 4.3. for more details):
+```{r, eval=F}
+# get acceleration data for all individuals of the study between the "2013-08-15 15:00:00.000" and "2013-08-15 15:01:00.000"
+getMovebankLocationData(study=74496970 , sensorID=653, login=loginStored, 
+                           timestamp_start="20130815150000000",
+                           timestamp_end="20130815150100000")
+```
+
+
+## Download location data including locations marked as outliers in Movebank
+There is also the option to include the locations marked as outliers in Movebank by setting the argument `includeOutliers=TRUE`. This is based on the column `visible` of the data.
+</br>  
+
+## Downloading a study with many locations
+If the study to be downloaded has many locations (probably in the order of 10s of millions, depends a bit on the available internet speed), the download may take so long that the connection breaks, and the study cannot be downloaded. We recommend to download each individual separately to ensure a successfully download. Bellow some examples of how one could do this.
+
+```{r, eval=F}
+## fist get the animal names of the study
+animalNames <- unique(getMovebankAnimals(study=74496970,login=loginStored)$local_identifier)
+
+## OPTION 1: create a loop to download each individual and afterwards rbind into one large data.frame (if study is very large, maybe option 2 is better). Use the "TryCatch" function in case there are individuals with no data.
+animalList <- lapply(animalNames, function(x){
+  print(paste0(x," (",match(x,animalNames), " of ", length(animalNames),")"))
+  tryCatch(getMovebankLocationData(study=74496970, animalName=x, sensorID="GPS", login=loginStored), error=function(e) NULL)
+})
+storksDF <- do.call("rbind", animalList)
+
+## OPTION 2: if the study is very large, loading and handling the large data.frame might be very time consuming and somewhat frustrating. Therefore it might be a good idea to save each individual separately as e.g. a .RData file, and do subsequent analysis always looping through all the single individual files. Use the "TryCatch" function in case there are individuals with no data.
+animalList <- lapply(animalNames, function(x){
+  print(paste0(x," (",match(x,animalNames), " of ", length(animalNames),")"))
+  tryCatch({storkDF <- getMovebankLocationData(study=74496970, animalName=x, sensorID="GPS", login=loginStored)
+ save(file=paste0("/path/to/my/folder/StorkIndv/",x,".RData"), storkDF)
+ }, error=function(e) NULL)
+})
+```
+</br>  
+
+# Download non-location data of a study as a 'data.frame'
+
+NOTE: _**Agreement to license terms**: to be able to download with R the data of a study on Movebank, you might first have to accept the license terms for the study. For this go to www.movebank.org, search for your study of interest, click on the download tab, and accept the license terms. **This only has to be done once per data set**._
+
+To download the non-location data from a study you can use the `getMovebankNonLocationData()` function. It returns a `data.frame`. Data from different sensors can be downloaded by specifying the sensor name in the `sensorID` argument. The valid names for the `sensorID` argument are those of the column 'name' or 'id' of the table returned by `(getMovebankSensors(login=loginloginStored)`. Non-location sensors (e.g. Acceleration, Magnetometer,...) are those marked as 'false' in the 'is_location_sensor' column of this table. 
+
+</p>
+
+## Download non-location data of a study
+Download non location data for a specific individual for a specific sensor. A vector of several sensors can be stated in the argument `sensorID` and/or of several individuals in the argument `animalName`. If the `animalName` argument is left empty, the data of all individuals is downloaded. If the `sensorID` argument is left empty, the data of all available non location sensors of the study is downloaded:
+```{r, eval=F}
+getMovebankNonLocationData(study=74496970 , sensorID="Acceleration", 
+                           animalName="DER AR439", login=loginStored)
+```
+
+</p>
+
+## Download non-location data for a selected time range
+Non location data can be also downloaded for a specific time range (See Section 4.3. for more details):
+```{r, eval=F}
+# get acceleration data for all individuals of the study between the "2013-08-15 15:00:00.000" and "2013-08-15 15:01:00.000"
+getMovebankNonLocationData(study=74496970 , sensorID=2365683, login=loginStored, 
+                           timestamp_start="20130815150000000",
+                           timestamp_end="20130815150100000")
+```
+
+</p>
+
+## Download non-location data with the 'getMovebankData' function
+There is also the option to download non-location data with the `getMovebankData()` function. With the argument `includeExtraSensors=TRUE` data of all non-location sensors available for that study will be downloaded and stored in the `unusedRecords` slot. With this option it is not possible to select specific sensors.
+```{r, eval=F}
+mymove <- getMovebankData(study=74496970, login=loginStored, 
+                          animalName="DER AR439",includeExtraSensors=TRUE)
+```
+```{r, eval=F}
+## to get a data.frame containing the data for the non-location sensors use the "unUsedRecords" function
+nonlocation <- as.data.frame(unUsedRecords(mymove))
+```
+
+</br>  
+
+## Downloading a study with a lot of data
+If the study to be downloaded has a lot of data (probably in the order of 10s of millions, depends a bit on the available internet speed), the download may take so long that the connection breaks, and the study cannot be downloaded. We recommend to download each individual separately to ensure a successfully download. Bellow some examples of how one could do this.
+
+```{r, eval=F}
+## fist get the animal names of the study
+animalNames <- unique(getMovebankAnimals(study=74496970,login=loginStored)$local_identifier)
+
+## OPTION 1: create a loop to download each individual and afterwards rbind into one large data.frame (if study is very large, maybe option 2 is better). Use the "TryCatch" function in case there are individuals with no data.
+animalList <- lapply(animalNames, function(x){
+  print(paste0(x," (",match(x,animalNames), " of ", length(animalNames),")"))
+  tryCatch(getMovebankNonLocationData(study=74496970, animalName=x, sensorID=2365683, login=loginStored), error=function(e) NULL)
+})
+storksACC <- do.call("rbind", animalList)
+
+## OPTION 2: if the study is very large, loading and handling the large data.frame might be very time consuming and somewhat frustrating. Therefore it might be a good idea to save each individual separately as e.g. a .RData file, and do subsequent analysis always looping through all the single individual files. Use the "TryCatch" function in case there are individuals with no data.
+animalList <- lapply(animalNames, function(x){
+  print(paste0(x," (",match(x,animalNames), " of ", length(animalNames),")"))
+  tryCatch({storkACC <- getMovebankNonLocationData(study=74496970, animalName=x, sensorID=2365683, login=loginStored)
+ save(file=paste0("/path/to/my/folder/StorkIndv/",x,".RData"), storkACC)
+ }, error=function(e) NULL)
+})
+```
+</br>  
+
+# Download data from the Movebank Data Repository as a 'move/moveStack' object
+
+This function downloads data from the ['Movebank Data Repository'](https://www.movebank.org/node/15294). It returns a `move` object (if only one individual is included) or a `moveStack` (if several individuals are included). If data of non-location sensors are included in the data set, these will be stored in the `unUsedRecords` slot of the move object.
+```{r, eval=F}
+getDataRepositoryData("doi:10.5441/001/1.2k536j54")
+```
+
+Visit the dataset's repository page by preceding the DOI with https://dx.doi.org/<$doi$>, for example https://dx.doi.org/10.5441/001/1.2k536j54. From here you can view citations and download a README that might contain additional details needed to properly understand and reference the data. If analyzing these published datasets, always consult the related papers and cite the paper and dataset. If preparing analysis for publication, also contact the data owner if possible for their contribution.
